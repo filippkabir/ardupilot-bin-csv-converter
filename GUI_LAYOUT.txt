@@ -1,0 +1,174 @@
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                  ArduPilot Bin to CSV Converter                               │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  Input File (.bin):   [__________________________________] [Browse]        │
+│                       (Entry field with file path)       (Browse Button)   │
+│                                                                               │
+│  Output File (.csv):  [__________________________________] [Browse]        │
+│                       (Entry field with file path)       (Browse Button)   │
+│                                                                               │
+│  ┌─ Options ────────────────────────────────────────────────────────────┐   │
+│  │ ☐ Separate by message type     ☐ Verbose output                    │   │
+│  │ (Creates separate CSV per type) (Shows detailed logging)            │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                               │
+│  Log Window:                                                                  │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │ INFO: Application started                                       ▲    │   │
+│  │ INFO: Selected input file: /path/to/flight.bin                 │    │   │
+│  │ INFO: Output file set to: /path/to/flight.csv                 │    │   │
+│  │ INFO: Reading information from /path/to/flight.bin...         │    │   │
+│  │ INFO: File information:                                        │ S  │   │
+│  │ INFO:   Size: 5242880 bytes                                   │ C  │   │
+│  │ INFO:         5 MB                                             │ R  │   │
+│  │ INFO:   Total messages: 12345                                 │ O  │   │
+│  │ INFO:   Message types: 5                                      │ L  │   │
+│  │ INFO:   Duration: 45.2 seconds                                │ L  │   │
+│  │ INFO:   Available message types:                              │ B  │   │
+│  │ INFO:     - GPS                                               │ A  │   │
+│  │ INFO:     - IMU                                               │ R  │   │
+│  │ INFO:     - BARO                                              │    │   │
+│  │ INFO:     - COMPASS                                           │    │   │
+│  │ INFO:     - ARSPD                                             │    │   │
+│  │ INFO: Starting conversion...                                  │ ▼  │   │
+│  │ INFO: Input: /path/to/flight.bin                              │    │   │
+│  │ INFO: Output: /path/to/flight.csv                             │    │   │
+│  │ INFO: Successfully converted /path/to/flight.bin to...        │    │   │
+│  │ INFO: Conversion complete                                     │    │   │
+│  │                                                                │    │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                               │
+│  [  Convert  ]  [  File Info  ]  [  Clear Log  ]                            │
+│  (Main button)  (Info button)    (Clear button)                             │
+│                                                                               │
+│  Status: Conversion complete                                                 │
+│  (Status bar showing current state)                                          │
+│                                                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+BUTTON FUNCTIONALITY GUIDE:
+
+┌─ Input File Browse ──────────────────────────────────────────────────────┐
+│ Opens file dialog to select a .bin file                                  │
+│ • Auto-updates Output File field with matching .csv filename             │
+│ • Shows file path in Input File entry field                              │
+│ • Filters for .bin files by default                                      │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌─ Output File Browse ─────────────────────────────────────────────────────┐
+│ Opens file dialog to specify output .csv location                        │
+│ • Can change name and location                                           │
+│ • Defaults to same directory as input file                               │
+│ • Updates Output File entry field                                        │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌─ Convert ────────────────────────────────────────────────────────────────┐
+│ Starts the conversion process                                            │
+│ • Validates input and output paths                                       │
+│ • Shows progress in Log Window                                           │
+│ • Button disables during conversion to prevent multiple clicks           │
+│ • Shows success/error popup when done                                    │
+│ • Updates Status Bar                                                     │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌─ File Info ──────────────────────────────────────────────────────────────┐
+│ Reads and displays information about the selected .bin file              │
+│ • File size (bytes, MB, KB)                                              │
+│ • Total message count                                                    │
+│ • Available message types                                                │
+│ • Flight duration in seconds                                             │
+│ • Shows results in Log Window                                            │
+│ • Button disables during read to prevent multiple clicks                 │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌─ Clear Log ──────────────────────────────────────────────────────────────┐
+│ Clears all text from the Log Window                                      │
+│ • Useful for starting fresh                                              │
+│ • Logs new action after clearing                                         │
+│ • Does NOT affect conversion history                                     │
+└──────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+STATUS BAR MESSAGES:
+
+┌──────────────────────┬─────────────────────────────────────────────────────┐
+│ Status Message       │ Meaning                                             │
+├──────────────────────┼─────────────────────────────────────────────────────┤
+│ Ready                │ Application idle, waiting for user action            │
+│ Converting...        │ File conversion in progress                          │
+│ Conversion complete  │ Successfully finished conversion                     │
+│ Conversion failed    │ Conversion encountered an error                      │
+│ Error occurred       │ Unexpected error (check Log Window for details)      │
+│ Reading file...      │ File Info operation in progress                      │
+│ File info displayed  │ Successfully read and displayed file information     │
+│ Error reading file   │ Could not read file information                      │
+└──────────────────────┴─────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+WINDOW SPECIFICATIONS:
+
+• Title:              "ArduPilot Bin to CSV Converter"
+• Default Size:       800x600 pixels (resizable)
+• Layout:             Grid-based (responsive to resizing)
+• Theme:              System default (native look on all platforms)
+• Components:
+  - 2 Input fields (for file paths)
+  - 2 Browse buttons (for file selection)
+  - 2 Checkboxes (for options)
+  - 3 Action buttons (Convert, File Info, Clear Log)
+  - 1 Scrollable log window (15 lines tall, 80 chars wide)
+  - 1 Status bar (shows current state)
+  - Multiple labels and frames
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+KEYBOARD NAVIGATION:
+
+• Tab:        Move focus between fields and buttons
+• Enter:      Activate focused button (Convert button when possible)
+• Ctrl+A:     Select all text in entry fields or log window
+• Ctrl+C:     Copy selected text from log window
+
+Note: Most interactions are mouse-based; full keyboard support coming soon.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+
+EXAMPLE INTERACTION SEQUENCE:
+
+1. User launches: python gui_converter.py
+2. Window opens with "Status: Ready"
+3. User clicks Browse (Input File)
+4. File dialog appears
+5. User selects "flight.bin"
+6. Input File shows: C:\Logs\flight.bin
+7. Output File shows: C:\Logs\flight.csv (auto-generated)
+8. Log shows: "Selected input file: C:\Logs\flight.bin"
+9. User clicks "File Info"
+10. Log shows file information and message types
+11. User can review information
+12. User clicks "Convert"
+13. Status changes to: "Converting..."
+14. Log shows conversion progress
+15. Status changes to: "Conversion complete"
+16. Success popup: "File converted successfully!"
+17. Output file created at: C:\Logs\flight.csv
+18. Status back to: "Ready"
+19. User can now convert another file or exit
+
+
+═══════════════════════════════════════════════════════════════════════════════

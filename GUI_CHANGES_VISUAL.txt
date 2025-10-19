@@ -1,0 +1,292 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  GUI INTERFACE - UPDATED WITH OUTPUT DIRECTORY               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+BEFORE (Original Version)
+══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────┐
+│      ArduPilot Bin to CSV Converter                      │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  Input File (.bin):    [____________] [Browse]          │
+│  Output File (.csv):   [____________] [Browse]          │
+│                                                          │
+│  Options:                                                │
+│  ☐ Separate by type    ☐ Verbose output                │
+│                                                          │
+│  Log Window...                                           │
+│                                                          │
+│  Status: Ready                                           │
+└─────────────────────────────────────────────────────────┘
+
+File Output:
+  Input:  /path/to/flight.bin
+  Output: /path/to/flight.csv (single file)
+
+
+AFTER (Updated Version with Output Directory)
+══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────┐
+│      ArduPilot Bin to CSV Converter                      │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  Input File (.bin):     [____________] [Browse]         │
+│  Output Directory:      [____________] [Browse]         │
+│                                                          │
+│  Options:                                                │
+│  ☐ Separate by type    ☐ Verbose output                │
+│                                                          │
+│  Log Window...                                           │
+│                                                          │
+│  Status: Ready                                           │
+└─────────────────────────────────────────────────────────┘
+
+Directory Output:
+  Input:  /path/to/flight.bin
+  Output: /path/to/flight_csv_output/ (directory)
+
+
+DETAILED COMPARISON
+══════════════════════════════════════════════════════════════════════════════
+
+┌──────────────────────────┬──────────────────────────────────────────┐
+│ ASPECT                   │ CHANGE                                   │
+├──────────────────────────┼──────────────────────────────────────────┤
+│ Label                    │ "Output File (.csv)" → "Output Directory"│
+│ Browse Button Type       │ File save dialog → Directory dialog      │
+│ Auto-generated Path      │ Same as input dir → Input dir subfolder  │
+│ Naming Pattern           │ filename.csv → {stem}_csv_output/        │
+│ CSV File Locations       │ Single file → Multiple files (in dir)    │
+│ Separate by Type Mode    │ Not applicable → Creates {TYPE}.csv      │
+└──────────────────────────┴──────────────────────────────────────────┘
+
+
+USE CASE EXAMPLES
+══════════════════════════════════════════════════════════════════════════════
+
+SCENARIO 1: Default Conversion (No Separate)
+────────────────────────────────────────────────────────────────────────────
+
+Input:
+  File Path:    D:\Logs\flight.bin
+  Separate:     ☐ (unchecked)
+
+GUI Display:
+  Input File:      D:\Logs\flight.bin
+  Output Directory: D:\Logs\flight_csv_output
+
+Process:
+  Click Convert
+  ↓
+  Output Directory created: D:\Logs\flight_csv_output\
+  ↓
+  Single CSV file created: D:\Logs\flight_csv_output\flight.csv
+  ↓
+  Contains ALL message types combined
+
+Log Output:
+  INFO: Selected input file: D:\Logs\flight.bin
+  INFO: Output directory set to: D:\Logs\flight_csv_output
+  INFO: Starting conversion...
+  INFO: Input: D:\Logs\flight.bin
+  INFO: Output Directory: D:\Logs\flight_csv_output
+  INFO: Successfully converted...
+
+
+SCENARIO 2: Separate by Message Type
+────────────────────────────────────────────────────────────────────────────
+
+Input:
+  File Path:    D:\Logs\flight.bin
+  Separate:     ☑ (checked)
+
+GUI Display:
+  Input File:      D:\Logs\flight.bin
+  Output Directory: D:\Logs\flight_csv_output
+
+Process:
+  Click Convert
+  ↓
+  Output Directory created: D:\Logs\flight_csv_output\
+  ↓
+  Multiple CSV files created:
+    D:\Logs\flight_csv_output\GPS.csv
+    D:\Logs\flight_csv_output\IMU.csv
+    D:\Logs\flight_csv_output\BARO.csv
+    D:\Logs\flight_csv_output\COMPASS.csv
+    D:\Logs\flight_csv_output\ARSPD.csv
+    (one file per message type found)
+  ↓
+  Each file contains data for ONE message type only
+
+Log Output:
+  INFO: Selected input file: D:\Logs\flight.bin
+  INFO: Output directory set to: D:\Logs\flight_csv_output
+  INFO: Starting conversion...
+  INFO: Input: D:\Logs\flight.bin
+  INFO: Output Directory: D:\Logs\flight_csv_output
+  INFO: Successfully converted...
+
+
+SCENARIO 3: Custom Output Directory
+────────────────────────────────────────────────────────────────────────────
+
+Input:
+  File Path:      D:\Logs\flight.bin
+  Browse Output:  Click to change directory
+  Select:         E:\ProcessedData\
+  Separate:       ☑ (checked)
+
+GUI Display:
+  Input File:      D:\Logs\flight.bin
+  Output Directory: E:\ProcessedData\
+
+Process:
+  Click Convert
+  ↓
+  Output Directory selected: E:\ProcessedData\
+  ↓
+  Multiple CSV files created in selected directory:
+    E:\ProcessedData\GPS.csv
+    E:\ProcessedData\IMU.csv
+    E:\ProcessedData\BARO.csv
+    E:\ProcessedData\COMPASS.csv
+    ...
+
+
+DIRECTORY STRUCTURE EXAMPLES
+══════════════════════════════════════════════════════════════════════════════
+
+Example 1: Default Mode (No Separate)
+──────────────────────────────────────────────────────────────────────────
+
+Original Structure:
+  D:\Logs\
+  ├── flight.bin
+  └── telemetry.bin
+
+After Conversion of flight.bin:
+  D:\Logs\
+  ├── flight.bin
+  ├── flight_csv_output\
+  │   └── flight.csv  ← Single combined file
+  └── telemetry.bin
+
+
+Example 2: Separate by Type Mode
+──────────────────────────────────────────────────────────────────────────
+
+Original Structure:
+  D:\Logs\
+  ├── flight.bin
+  └── telemetry.bin
+
+After Conversion of flight.bin with "Separate by type":
+  D:\Logs\
+  ├── flight.bin
+  ├── flight_csv_output\
+  │   ├── GPS.csv      ← GPS messages only
+  │   ├── IMU.csv      ← IMU messages only
+  │   ├── BARO.csv     ← Barometer messages only
+  │   ├── COMPASS.csv  ← Compass messages only
+  │   └── ARSPD.csv    ← Airspeed messages only
+  └── telemetry.bin
+
+
+Example 3: Multiple Conversions
+──────────────────────────────────────────────────────────────────────────
+
+Original Structure:
+  D:\Logs\
+  ├── flight1.bin
+  ├── flight2.bin
+  └── flight3.bin
+
+After Converting All with Separate Mode:
+  D:\Logs\
+  ├── flight1.bin
+  ├── flight1_csv_output\
+  │   ├── GPS.csv
+  │   ├── IMU.csv
+  │   └── (other types...)
+  ├── flight2.bin
+  ├── flight2_csv_output\
+  │   ├── GPS.csv
+  │   ├── IMU.csv
+  │   └── (other types...)
+  ├── flight3.bin
+  ├── flight3_csv_output\
+  │   ├── GPS.csv
+  │   ├── IMU.csv
+  │   └── (other types...)
+  └── (organized, easy to find outputs)
+
+
+QUICK WORKFLOW GUIDE
+══════════════════════════════════════════════════════════════════════════════
+
+For Basic Conversion:
+  1. Click Browse (Input File)
+  2. Select: C:\Logs\flight.bin
+  3. Auto-fills Output Directory: C:\Logs\flight_csv_output\
+  4. Separate checkbox: ☐ (keep unchecked)
+  5. Click Convert
+  6. Result: C:\Logs\flight_csv_output\flight.csv
+
+For Separate Message Types:
+  1. Click Browse (Input File)
+  2. Select: C:\Logs\flight.bin
+  3. Auto-fills Output Directory: C:\Logs\flight_csv_output\
+  4. Separate checkbox: ☑ (CHECK THIS)
+  5. Click Convert
+  6. Result: C:\Logs\flight_csv_output\
+             ├── GPS.csv
+             ├── IMU.csv
+             └── (other types...)
+
+For Custom Location:
+  1. Click Browse (Input File)
+  2. Select: C:\Logs\flight.bin
+  3. Output Directory: C:\Logs\flight_csv_output\
+  4. Click Browse (Output Directory)
+  5. Select: D:\MyConversions\
+  6. Set Separate: ☑ (optional)
+  7. Click Convert
+  8. Result: D:\MyConversions\
+             ├── GPS.csv
+             ├── IMU.csv
+             └── (other types...)
+
+
+KEY IMPROVEMENTS
+══════════════════════════════════════════════════════════════════════════════
+
+✓ Better Organization
+  - All related files in one directory
+  - Clear naming convention
+  - Easy to manage multiple conversions
+
+✓ More Flexible
+  - Can choose any output directory
+  - Default location is smart and predictable
+  - Supports both combined and separated output
+
+✓ User-Friendly
+  - No manual path construction needed
+  - Visual directory selection (not typing paths)
+  - Clear feedback in log window
+
+✓ Professional Output
+  - Organized file structure
+  - Deterministic naming
+  - Scalable for batch operations
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Updated: October 19, 2025
+Version: 2.0 (Directory-based Output)
+Status: Ready for Use ✨

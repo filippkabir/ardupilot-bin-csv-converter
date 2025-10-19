@@ -66,14 +66,25 @@ class BinToCsvConverter:
         Convert binary log to a single CSV file.
         
         Args:
-            input_path: Path to input .bin file
-            output_path: Path to output .csv file
+            input_path: Path to input .bin file or output directory
+            output_path: Path to output .csv file or directory
             message_types: List of message types to include
             
         Returns:
             True if successful, False otherwise
         """
         try:
+            # Determine if output_path is a directory or file
+            if os.path.isdir(output_path) or (not os.path.exists(output_path) and output_path.endswith(os.sep)):
+                # It's a directory - derive filename from input
+                output_dir = output_path
+                input_stem = os.path.splitext(os.path.basename(input_path))[0]
+                output_file = os.path.join(output_dir, f"{input_stem}.csv")
+            else:
+                # It's a file path
+                output_dir = os.path.dirname(output_path)
+                output_file = output_path
+            
             # Collect all messages
             messages = []
             for message in self.parser.parse_messages(input_path, message_types):
@@ -87,12 +98,11 @@ class BinToCsvConverter:
             df = pd.DataFrame(messages)
             
             # Ensure output directory exists
-            output_dir = os.path.dirname(output_path)
             if output_dir and not os.path.exists(output_dir):
                 os.makedirs(output_dir)
             
-            df.to_csv(output_path, index=False)
-            self.logger.info(f"Successfully saved {len(messages)} messages to {output_path}")
+            df.to_csv(output_file, index=False)
+            self.logger.info(f"Successfully saved {len(messages)} messages to {output_file}")
             
             return True
             
@@ -107,13 +117,20 @@ class BinToCsvConverter:
         
         Args:
             input_path: Path to input .bin file
-            output_base: Base path for output files (will append message type)
+            output_base: Output directory path for separate files
             message_types: List of message types to include
             
         Returns:
             True if successful, False otherwise
         """
         try:
+            # Ensure output_base is treated as a directory
+            output_dir = output_base
+            
+            # Create output directory if it doesn't exist
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+            
             # Group messages by type
             messages_by_type = {}
             
@@ -127,19 +144,14 @@ class BinToCsvConverter:
                 self.logger.warning(f"No messages found in {input_path}")
                 return False
             
-            # Create output directory
-            output_dir = os.path.dirname(output_base)
-            if output_dir and not os.path.exists(output_dir):
-                os.makedirs(output_dir)
-            
-            # Save each message type to separate file
+            # Save each message type to separate file in the output directory
             for msg_type, messages in messages_by_type.items():
                 df = pd.DataFrame(messages)
-                output_file = f"{output_base}_{msg_type}.csv"
+                output_file = os.path.join(output_dir, f"{msg_type}.csv")
                 df.to_csv(output_file, index=False)
                 self.logger.info(f"Saved {len(messages)} {msg_type} messages to {output_file}")
             
-            self.logger.info(f"Successfully converted {input_path} to {len(messages_by_type)} separate CSV files")
+            self.logger.info(f"Successfully converted {input_path} to {len(messages_by_type)} separate CSV files in {output_dir}")
             return True
             
         except Exception as e:
